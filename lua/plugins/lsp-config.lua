@@ -19,17 +19,20 @@ return {
     config = function()
       local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-      local lspconfig = require("lspconfig")
-      lspconfig.ts_ls.setup({
-        capabilities = capabilities
-      })
-      lspconfig.html.setup({
-        capabilities = capabilities
-      })
-      lspconfig.lua_ls.setup({
-        capabilities = capabilities
+      vim.lsp.config("ts_ls", {
+        capabilities = capabilities,
       })
 
+      vim.lsp.config("html", {
+        capabilities = capabilities,
+      })
+
+      vim.lsp.config("lua_ls", {
+        capabilities = capabilities,
+      })
+
+      -- 3. Enable the servers so they start up on matching filetypes
+      vim.lsp.enable({ "ts_ls", "html", "lua_ls" })
       vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
       vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, {})
       vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, {})
