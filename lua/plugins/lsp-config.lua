@@ -11,6 +11,8 @@ return {
     lazy = false,
     opts = {
       auto_install = true,
+      -- Ensure pyright is downloaded and tracked by Mason
+      ensure_installed = { "ts_ls", "html", "lua_ls", "pyright" },_
     },
   },
   {
@@ -31,8 +33,24 @@ return {
         capabilities = capabilities,
       })
 
-      -- 3. Enable the servers so they start up on matching filetypes
-      vim.lsp.enable({ "ts_ls", "html", "lua_ls" })
+      -- 1. Configure Pyright settings and capabilities
+      vim.lsp.config("pyright", {
+        capabilities = capabilities,
+        settings = {
+          python = {
+            analysis = {
+              autoSearchPaths = true,
+              diagnosticMode = "openFilesOnly", -- Reduces lag by only linting open files
+              useLibraryCodeForTypes = true,
+            },
+          },
+        },
+      })
+
+      -- 2. Added "pyright" to the enabled list so it autostarts on .py files
+      vim.lsp.enable({ "ts_ls", "html", "lua_ls", "pyright" })
+
+      -- Keymaps
       vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
       vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, {})
       vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, {})
@@ -40,3 +58,4 @@ return {
     end,
   },
 }
+
